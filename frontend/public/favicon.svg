@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <!-- Background Obsidian Circle with Subtle Amber Border -->
+  <circle cx="32" cy="32" r="30" fill="#0B0A0A" stroke="#C5A880" stroke-width="1.5" stroke-opacity="0.4"/>
+  
+  <!-- Subtle Amber Radial Ambient Glow -->
+  <circle cx="32" cy="32" r="22" fill="#C5A880" fill-opacity="0.08"/>
+
+  <!-- Stylized Crescent Moon in Warm Gold -->
+  <path d="M38 14C28.0589 14 20 22.0589 20 32C20 41.9411 28.0589 50 38 50C33.5 48.5 29 43.5 29 32C29 20.5 33.5 15.5 38 14Z" fill="url(#goldGradient)"/>
+
+  <!-- Artisanal Coffee Bean Nested Within Crescent Glow -->
+  <g transform="translate(35, 32) rotate(25) scale(0.9)">
+    <!-- Bean Body -->
+    <ellipse cx="0" cy="0" rx="8" ry="12" fill="url(#goldGradient)" />
+    <!-- Bean Center Crease Line -->
+    <path d="M0 -11C-1.5 -6 1.5 6 0 11" stroke="#0B0A0A" stroke-width="1.8" stroke-linecap="round"/>
+  </g>
+
+  <!-- Luxury Gold Sparkle Accent -->
+  <path d="M48 18L49 21L52 22L49 23L48 26L47 23L44 22L47 21L48 18Z" fill="#F3EEEA"/>
+
+  <defs>
+    <linearGradient id="goldGradient" x1="16" y1="14" x2="48" y2="50" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#F3EEEA"/>
+      <stop offset="50%" stop-color="#C5A880"/>
+      <stop offset="100%" stop-color="#A2845B"/>
+    </linearGradient>
+  </defs>
+</svg>
