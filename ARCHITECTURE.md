@@ -100,6 +100,10 @@ Verify API uptime:
 curl -X GET https://your-api-domain.com/api/health
 ```
 
+### Reference Documentation
+- **Production Deployment Guide:** See [DEPLOYMENT_GUIDE.md](./DEPLOYMENT_GUIDE.md) for step-by-step MongoDB Atlas, Render, and Vercel setup.
+- **Quickstart & Setup:** See [README.md](./README.md) for local installation, scripts, and API contracts.
+
 ---
 
 © 2026 Moon & Bean Artisanal Roastery. All rights reserved.
