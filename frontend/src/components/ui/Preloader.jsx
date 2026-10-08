@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { useGSAP } from '@gsap/react';
 import { gsap } from '../../lib/gsapConfig';
 
@@ -15,6 +15,14 @@ const Preloader = ({ onComplete }) => {
   const centerContentRef = useRef(null);
 
   const [count, setCount] = useState(0);
+
+  // Safety failsafe: If animations are blocked or interrupted, dismiss curtains after 3.5s
+  useEffect(() => {
+    const fallbackTimer = setTimeout(() => {
+      if (onComplete) onComplete();
+    }, 3500);
+    return () => clearTimeout(fallbackTimer);
+  }, [onComplete]);
 
   useGSAP(() => {
     const tl = gsap.timeline({
