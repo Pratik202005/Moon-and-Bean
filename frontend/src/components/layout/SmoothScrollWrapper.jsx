@@ -19,6 +19,9 @@ const SmoothScrollWrapper = ({ children }) => {
       infinite: false,
     });
 
+    // Expose Lenis globally for modal scroll lock coordination
+    window.__lenis = lenis;
+
     // Connect Lenis scroll to ScrollTrigger
     lenis.on('scroll', ScrollTrigger.update);
 
@@ -32,6 +35,9 @@ const SmoothScrollWrapper = ({ children }) => {
     gsap.ticker.lagSmoothing(0);
 
     return () => {
+      if (window.__lenis === lenis) {
+        window.__lenis = null;
+      }
       lenis.destroy();
       gsap.ticker.remove(updateTick);
     };

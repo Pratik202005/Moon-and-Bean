@@ -4,12 +4,26 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { X, CreditCard, DollarSign, CheckCircle2, QrCode, ArrowRight, Sparkles, PlusCircle, LayoutDashboard, User, Mail } from 'lucide-react';
 import { useCart } from '../../context/CartContext';
 import { useUserAuth } from '../../context/UserAuthContext';
+import { useModalScrollLock } from '../../hooks/useModalScrollLock';
 import API_BASE_URL from '../../config/api';
 
 const CheckoutModal = ({ isOpen, onClose, onCheckoutSuccess }) => {
+  useModalScrollLock(isOpen);
   const { cartItems, total, subtotal, tax, clearCart, setIsCartOpen } = useCart();
   const { user } = useUserAuth();
   const navigate = useNavigate();
+
+  // Close on Escape key press
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape' && isOpen) {
+        if (receipt) setReceipt(null);
+        onClose();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, onClose, receipt]);
 
   const [paymentMethod, setPaymentMethod] = useState('card'); // 'card' | 'table' | 'upi'
   const [tableNo, setTableNo] = useState('Barista Salon Table 4');
@@ -140,7 +154,10 @@ const CheckoutModal = ({ isOpen, onClose, onCheckoutSuccess }) => {
 
   return (
     <AnimatePresence>
-      <div className="fixed inset-0 z-[99999] flex items-center justify-center p-4">
+      <div
+        data-lenis-prevent="true"
+        className="fixed inset-0 z-[99999] flex items-center justify-center p-3 sm:p-4 overflow-y-auto overscroll-contain"
+      >
         {/* Backdrop */}
         <motion.div
           initial={{ opacity: 0 }}
@@ -155,10 +172,13 @@ const CheckoutModal = ({ isOpen, onClose, onCheckoutSuccess }) => {
 
         {/* Modal Card */}
         <motion.div
+          data-lenis-prevent="true"
+          onWheel={(e) => e.stopPropagation()}
+          onTouchMove={(e) => e.stopPropagation()}
           initial={{ opacity: 0, scale: 0.95, y: 20 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.95, y: 20 }}
-          className="w-full max-w-lg glass-card border border-moon-gold/40 rounded-3xl p-6 sm:p-8 relative z-10 shadow-2xl space-y-6 text-moon-cream max-h-[90vh] overflow-y-auto"
+          className="w-full max-w-lg glass-card border border-moon-gold/40 rounded-3xl p-6 sm:p-8 relative z-10 shadow-2xl space-y-6 text-moon-cream max-h-[88vh] overflow-y-auto overscroll-contain my-auto"
         >
           {/* Header */}
           <div className="flex items-center justify-between border-b border-white/10 pb-4">

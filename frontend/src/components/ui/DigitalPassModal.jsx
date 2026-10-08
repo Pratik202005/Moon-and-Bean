@@ -1,16 +1,33 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Sparkles, Calendar, Clock, MapPin, Users, QrCode, CheckCircle, ShieldCheck } from 'lucide-react';
 import SpecularGlow from './SpecularGlow';
+import { useModalScrollLock } from '../../hooks/useModalScrollLock';
 
 const DigitalPassModal = ({ isOpen, onClose, passData }) => {
+  useModalScrollLock(isOpen);
+
+  // Close on Escape key press
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape' && isOpen) {
+        onClose();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, onClose]);
+
   if (!isOpen || !passData) return null;
 
   const { bookingRef, name, date, timeSlot, zone, guests, status } = passData;
 
   return (
     <AnimatePresence>
-      <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4">
+      <div
+        data-lenis-prevent="true"
+        className="fixed inset-0 z-[9999] flex items-center justify-center p-3 sm:p-4 overflow-y-auto overscroll-contain"
+      >
         {/* Backdrop */}
         <motion.div
           initial={{ opacity: 0 }}
@@ -22,11 +39,14 @@ const DigitalPassModal = ({ isOpen, onClose, passData }) => {
 
         {/* Collectible Luxury Ticket Stub Modal */}
         <motion.div
+          data-lenis-prevent="true"
+          onWheel={(e) => e.stopPropagation()}
+          onTouchMove={(e) => e.stopPropagation()}
           initial={{ opacity: 0, scale: 0.92, y: 25 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.92, y: 25 }}
           transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-          className="w-full max-w-sm bg-gradient-to-b from-[#181513] via-[#12100f] to-[#0d0b0a] border border-moon-gold/50 rounded-3xl p-6 relative z-10 shadow-[0_25px_60px_rgba(0,0,0,0.85),0_0_30px_rgba(212,175,55,0.15)] text-moon-cream overflow-hidden group"
+          className="w-full max-w-sm max-h-[90vh] overflow-y-auto overscroll-contain bg-gradient-to-b from-[#181513] via-[#12100f] to-[#0d0b0a] border border-moon-gold/50 rounded-3xl p-6 relative z-10 shadow-[0_25px_60px_rgba(0,0,0,0.85),0_0_30px_rgba(212,175,55,0.15)] text-moon-cream group my-auto"
         >
           <SpecularGlow />
 

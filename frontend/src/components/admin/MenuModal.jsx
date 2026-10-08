@@ -2,10 +2,24 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Check } from 'lucide-react';
 import API_BASE_URL from '../../config/api';
+import { useModalScrollLock } from '../../hooks/useModalScrollLock';
 
 const categories = ['Signature Roasts', 'Specialty Coffee', 'Cold Brews & Drinks', 'Fresh Bakery & Desserts'];
 
 const MenuModal = ({ isOpen, onClose, item, onSave, token }) => {
+  useModalScrollLock(isOpen);
+
+  // Close on Escape key press
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape' && isOpen) {
+        onClose();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, onClose]);
+
   const [formData, setFormData] = useState({
     name: '',
     category: 'Signature Roasts',
@@ -92,7 +106,10 @@ const MenuModal = ({ isOpen, onClose, item, onSave, token }) => {
 
   return (
     <AnimatePresence>
-      <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4">
+      <div
+        data-lenis-prevent="true"
+        className="fixed inset-0 z-[9999] flex items-center justify-center p-3 sm:p-4 overflow-y-auto overscroll-contain"
+      >
         {/* Backdrop */}
         <motion.div
           initial={{ opacity: 0 }}
@@ -104,10 +121,13 @@ const MenuModal = ({ isOpen, onClose, item, onSave, token }) => {
 
         {/* Modal Window */}
         <motion.div
+          data-lenis-prevent="true"
+          onWheel={(e) => e.stopPropagation()}
+          onTouchMove={(e) => e.stopPropagation()}
           initial={{ opacity: 0, scale: 0.95, y: 20 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.95, y: 20 }}
-          className="w-full max-w-xl glass-card border border-moon-gold/30 rounded-3xl p-6 sm:p-8 relative z-10 shadow-2xl space-y-6 max-h-[90vh] overflow-y-auto"
+          className="w-full max-w-xl glass-card border border-moon-gold/30 rounded-3xl p-6 sm:p-8 relative z-10 shadow-2xl space-y-6 max-h-[88vh] overflow-y-auto overscroll-contain my-auto"
         >
           <div className="flex items-center justify-between border-b border-white/10 pb-4">
             <h3 className="font-cinzel text-xl text-moon-cream">

@@ -1,11 +1,25 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Calendar, Users, Clock, MapPin, Printer, ArrowRight, Sparkles } from 'lucide-react';
+import { Calendar, Users, Clock, MapPin, Printer, ArrowRight, Sparkles, X } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { ZONES } from './FloorPlanPicker';
 import SpecularGlow from './SpecularGlow';
+import { useModalScrollLock } from '../../hooks/useModalScrollLock';
 
 const ReservationModal = ({ isOpen, onClose, reservationData }) => {
+  useModalScrollLock(isOpen);
+
+  // Close on Escape key
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape' && isOpen) {
+        onClose();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, onClose]);
+
   if (!reservationData) return null;
 
   const zoneInfo = ZONES.find((z) => z.id === reservationData.zone) || ZONES[0];
@@ -17,7 +31,10 @@ const ReservationModal = ({ isOpen, onClose, reservationData }) => {
   return (
     <AnimatePresence>
       {isOpen && (
-        <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 sm:p-6 overflow-y-auto">
+        <div
+          data-lenis-prevent="true"
+          className="fixed inset-0 z-[9999] flex items-center justify-center p-4 sm:p-6 overflow-y-auto overscroll-contain"
+        >
           {/* Backdrop Blur */}
           <motion.div
             initial={{ opacity: 0 }}
@@ -29,11 +46,14 @@ const ReservationModal = ({ isOpen, onClose, reservationData }) => {
 
           {/* Modal Container */}
           <motion.div
+            data-lenis-prevent="true"
+            onWheel={(e) => e.stopPropagation()}
+            onTouchMove={(e) => e.stopPropagation()}
             initial={{ opacity: 0, scale: 0.9, y: 30 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, y: 30 }}
             transition={{ type: 'spring', damping: 28, stiffness: 320 }}
-            className="relative z-10 w-full max-w-lg rounded-3xl glass-card border-2 border-moon-gold/60 gold-glow p-8 sm:p-10 shadow-2xl text-center space-y-8 my-auto overflow-hidden"
+            className="relative z-10 w-full max-w-lg rounded-3xl glass-card border-2 border-moon-gold/60 gold-glow p-8 sm:p-10 shadow-2xl text-center space-y-8 my-auto overflow-y-auto overscroll-contain max-h-[90vh]"
           >
             {/* Background Ambient Glow */}
             <div className="absolute -top-24 left-1/2 -translate-x-1/2 w-64 h-64 bg-moon-gold/20 rounded-full blur-3xl pointer-events-none" />

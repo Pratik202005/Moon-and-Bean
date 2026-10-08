@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Plus, Minus, ShoppingBag, Sparkles, Thermometer, Flame, Coffee } from 'lucide-react';
 import { useCart } from '../../context/CartContext';
+import { useModalScrollLock } from '../../hooks/useModalScrollLock';
 
 // Beverage Customization Options
 const temperatureOptions = ['Hot Barista Pour', 'Over Hand-Cut Ice'];
@@ -16,6 +17,7 @@ const presentationOptions = ['Dine-In Lounge Serve', 'Luxury Takeaway Box'];
 
 const ItemModal = ({ item, isOpen, onClose }) => {
   const { addToCart } = useCart();
+  useModalScrollLock(isOpen);
 
   // Beverage State
   const [temperature, setTemperature] = useState('Hot Barista Pour');
@@ -30,6 +32,17 @@ const ItemModal = ({ item, isOpen, onClose }) => {
 
   const [quantity, setQuantity] = useState(1);
   const [addedRipple, setAddedRipple] = useState(false);
+
+  // Close on Escape key press
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape' && isOpen) {
+        onClose();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, onClose]);
 
   if (!item) return null;
 
@@ -61,7 +74,10 @@ const ItemModal = ({ item, isOpen, onClose }) => {
   return (
     <AnimatePresence>
       {isOpen && (
-        <div className="fixed inset-0 z-[9995] flex items-center justify-center p-4 sm:p-6 overflow-y-auto">
+        <div
+          data-lenis-prevent="true"
+          className="fixed inset-0 z-[9995] flex items-center justify-center p-3 sm:p-6 overflow-y-auto overscroll-contain"
+        >
           {/* Dark Backdrop Overlay */}
           <motion.div
             initial={{ opacity: 0 }}
@@ -73,23 +89,26 @@ const ItemModal = ({ item, isOpen, onClose }) => {
 
           {/* Modal Card */}
           <motion.div
+            data-lenis-prevent="true"
+            onWheel={(e) => e.stopPropagation()}
+            onTouchMove={(e) => e.stopPropagation()}
             initial={{ opacity: 0, scale: 0.9, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, y: 20 }}
             transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-            className="relative z-10 w-full max-w-2xl max-h-[90vh] rounded-3xl glass-card border border-white/10 overflow-hidden shadow-2xl my-auto flex flex-col"
+            className="relative z-10 w-full max-w-2xl max-h-[88vh] rounded-3xl glass-card border border-white/10 shadow-2xl my-auto flex flex-col overflow-hidden"
           >
             {/* Close Button */}
             <button
               onClick={onClose}
-              className="absolute top-5 right-5 z-20 w-9 h-9 rounded-full glass-pill flex items-center justify-center text-moon-muted hover:text-moon-cream hover:border-moon-gold/50 transition duration-300"
+              className="absolute top-4 right-4 z-20 w-9 h-9 rounded-full glass-pill flex items-center justify-center text-moon-muted hover:text-moon-cream hover:border-moon-gold/50 transition duration-300"
             >
               <X size={18} />
             </button>
 
-            <div className="grid grid-cols-1 md:grid-cols-12 overflow-y-auto">
+            <div className="grid grid-cols-1 md:grid-cols-12 overflow-hidden flex-1 min-h-0">
               {/* Product Cover Image */}
-              <div className="md:col-span-5 relative h-56 md:h-auto min-h-[220px]">
+              <div className="md:col-span-5 relative h-48 md:h-full min-h-[200px] shrink-0 bg-moon-dark">
                 <img
                   src={item.image}
                   alt={item.name}
@@ -98,8 +117,13 @@ const ItemModal = ({ item, isOpen, onClose }) => {
                 <div className="absolute inset-0 bg-gradient-to-t from-moon-black via-transparent to-transparent opacity-60 md:hidden" />
               </div>
 
-              {/* Product Customizer Detail */}
-              <div className="md:col-span-7 p-6 sm:p-8 space-y-5">
+              {/* Product Customizer Detail Column */}
+              <div className="md:col-span-7 flex flex-col min-h-0 overflow-hidden bg-[#141210]">
+                {/* Scrollable Customization Options */}
+                <div
+                  data-lenis-prevent="true"
+                  className="overflow-y-auto overscroll-contain p-6 sm:p-7 space-y-5 flex-1"
+                >
                 <div>
                   <span className="font-mono text-[10px] uppercase tracking-widest text-moon-gold">
                     {item.origin || item.category}
@@ -302,11 +326,13 @@ const ItemModal = ({ item, isOpen, onClose }) => {
                     </div>
                   </div>
                 )}
+                </div>
 
-                {/* Quantity & Add Action Row */}
-                <div className="pt-4 border-t border-white/10 flex items-center justify-between gap-4">
+                {/* Sticky Pinned Quantity & Add Action Row */}
+                <div className="p-4 sm:p-6 border-t border-white/10 bg-[#141210]/95 backdrop-blur-md shrink-0 flex items-center justify-between gap-4">
                   <div className="flex items-center gap-3 glass-pill px-3 py-1.5 rounded-full">
                     <button
+                      type="button"
                       onClick={() => setQuantity((q) => Math.max(1, q - 1))}
                       className="text-moon-muted hover:text-moon-cream"
                     >
@@ -316,6 +342,7 @@ const ItemModal = ({ item, isOpen, onClose }) => {
                       {quantity}
                     </span>
                     <button
+                      type="button"
                       onClick={() => setQuantity((q) => q + 1)}
                       className="text-moon-muted hover:text-moon-cream"
                     >
@@ -324,6 +351,7 @@ const ItemModal = ({ item, isOpen, onClose }) => {
                   </div>
 
                   <button
+                    type="button"
                     onClick={handleAdd}
                     className={`flex-grow py-3 px-6 rounded-full font-sans text-xs uppercase tracking-widest font-semibold flex items-center justify-center gap-2 transition duration-300 ${
                       addedRipple

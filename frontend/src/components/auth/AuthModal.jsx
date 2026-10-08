@@ -1,11 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Mail, Lock, User, Phone, Sparkles, ArrowRight, AlertCircle, ShieldCheck } from 'lucide-react';
 import { useUserAuth } from '../../context/UserAuthContext';
+import { useModalScrollLock } from '../../hooks/useModalScrollLock';
 
 const AuthModal = ({ isOpen, onClose, onSuccess }) => {
+  useModalScrollLock(isOpen);
   const [tab, setTab] = useState('signin');
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -14,6 +16,17 @@ const AuthModal = ({ isOpen, onClose, onSuccess }) => {
   const [error, setError] = useState('');
 
   const { login, register, loading } = useUserAuth();
+
+  // Close on Escape key press
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape' && isOpen) {
+        onClose();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, onClose]);
 
   if (!isOpen) return null;
 
@@ -38,7 +51,10 @@ const AuthModal = ({ isOpen, onClose, onSuccess }) => {
 
   const modalNode = (
     <AnimatePresence>
-      <div className="fixed inset-0 z-[99999] flex items-center justify-center p-4 overflow-y-auto">
+      <div
+        data-lenis-prevent="true"
+        className="fixed inset-0 z-[99999] flex items-center justify-center p-4 overflow-y-auto overscroll-contain"
+      >
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -48,10 +64,13 @@ const AuthModal = ({ isOpen, onClose, onSuccess }) => {
         />
 
         <motion.div
+          data-lenis-prevent="true"
+          onWheel={(e) => e.stopPropagation()}
+          onTouchMove={(e) => e.stopPropagation()}
           initial={{ opacity: 0, scale: 0.95, y: 20 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.95, y: 20 }}
-          className="w-full max-w-md max-h-[90vh] overflow-y-auto glass-card p-6 sm:p-8 rounded-3xl border border-moon-gold/40 shadow-2xl relative z-10 space-y-6 my-auto"
+          className="w-full max-w-md max-h-[90vh] overflow-y-auto overscroll-contain glass-card p-6 sm:p-8 rounded-3xl border border-moon-gold/40 shadow-2xl relative z-10 space-y-6 my-auto"
         >
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">

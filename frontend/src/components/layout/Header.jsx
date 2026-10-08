@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu as MenuIcon, X, ShoppingBag, LogOut, LayoutDashboard, ShieldCheck } from 'lucide-react';
+import { Menu as MenuIcon, X, ShoppingBag, LogOut, LayoutDashboard, ShieldCheck, User } from 'lucide-react';
 import { useCart } from '../../context/CartContext';
 import { useUserAuth } from '../../context/UserAuthContext';
 import AuthModal from '../auth/AuthModal';
@@ -195,14 +195,26 @@ const Header = () => {
                 </button>
               </div>
             ) : (
-              <Link
-                to="/admin/login"
-                onClick={() => setMobileMenuOpen(false)}
-                className="flex items-center gap-2 font-mono text-xs text-moon-gold border-t border-white/10 pt-4"
-              >
-                <ShieldCheck size={16} />
-                <span>Staff Portal</span>
-              </Link>
+              <div className="flex flex-col gap-3 border-t border-white/10 pt-4">
+                <button
+                  onClick={() => {
+                    setMobileMenuOpen(false);
+                    setIsAuthModalOpen(true);
+                  }}
+                  className="flex items-center gap-2 font-sans text-xs text-moon-gold text-left font-medium"
+                >
+                  <User size={16} />
+                  <span>Sign In / Create Account</span>
+                </button>
+                <Link
+                  to="/admin/login"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="flex items-center gap-2 font-mono text-xs text-stone-400 hover:text-moon-gold"
+                >
+                  <ShieldCheck size={16} />
+                  <span>Staff Portal</span>
+                </Link>
+              </div>
             )}
           </nav>
         </div>

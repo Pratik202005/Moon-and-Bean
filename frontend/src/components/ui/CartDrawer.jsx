@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Trash2, Plus, Minus, ArrowRight, ShoppingBag } from 'lucide-react';
 import { useCart } from '../../context/CartContext';
 import { useUserAuth } from '../../context/UserAuthContext';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { useModalScrollLock } from '../../hooks/useModalScrollLock';
 import CheckoutModal from './CheckoutModal';
 
 const CartDrawer = () => {
@@ -17,6 +18,19 @@ const CartDrawer = () => {
     tax,
     total,
   } = useCart();
+
+  useModalScrollLock(isCartOpen);
+
+  // Close on Escape key press
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape' && isCartOpen) {
+        setIsCartOpen(false);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isCartOpen, setIsCartOpen]);
 
   const { user } = useUserAuth();
   const navigate = useNavigate();
@@ -42,7 +56,10 @@ const CartDrawer = () => {
     <>
       <AnimatePresence>
         {isCartOpen && (
-          <div className="fixed inset-0 z-[9999] overflow-hidden">
+          <div
+            data-lenis-prevent="true"
+            className="fixed inset-0 z-[9999] overflow-hidden"
+          >
             {/* Backdrop Blur */}
             <motion.div
               initial={{ opacity: 0 }}
@@ -55,11 +72,14 @@ const CartDrawer = () => {
             {/* Slide-out Panel */}
             <div className="fixed inset-y-0 right-0 max-w-full flex pl-10">
               <motion.div
+                data-lenis-prevent="true"
+                onWheel={(e) => e.stopPropagation()}
+                onTouchMove={(e) => e.stopPropagation()}
                 initial={{ x: '100%' }}
                 animate={{ x: 0 }}
                 exit={{ x: '100%' }}
                 transition={{ type: 'spring', damping: 28, stiffness: 300 }}
-                className="w-screen max-w-md bg-moon-dark border-l border-white/10 p-6 sm:p-8 flex flex-col justify-between shadow-2xl relative z-10"
+                className="w-screen max-w-md bg-moon-dark border-l border-white/10 p-6 sm:p-8 flex flex-col justify-between shadow-2xl relative z-10 overscroll-contain"
               >
                 {/* Header */}
                 <div className="flex items-center justify-between border-b border-white/10 pb-5">
@@ -79,7 +99,10 @@ const CartDrawer = () => {
                 </div>
 
                 {/* Items List Container */}
-                <div className="flex-1 overflow-y-auto py-6 space-y-4 my-2">
+                <div
+                  data-lenis-prevent="true"
+                  className="flex-1 overflow-y-auto overscroll-contain py-6 space-y-4 my-2"
+                >
                   {cartItems.length === 0 ? (
                     <div className="h-full flex flex-col items-center justify-center text-center space-y-4 text-moon-muted">
                       <div className="w-16 h-16 rounded-full glass-pill flex items-center justify-center text-moon-gold/50">

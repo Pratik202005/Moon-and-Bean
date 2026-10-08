@@ -75,8 +75,19 @@ export const CartProvider = ({ children }) => {
     setCartItems([]);
   };
 
-  const cartCount = cartItems.reduce((acc, item) => acc + item.quantity, 0);
-  const subtotal = cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0);
+  const parsePrice = (price) => {
+    if (typeof price === 'number') return isNaN(price) ? 0 : price;
+    if (!price) return 0;
+    const cleaned = String(price).replace(/[^0-9.]/g, '');
+    const parsed = parseFloat(cleaned);
+    return isNaN(parsed) ? 0 : parsed;
+  };
+
+  const cartCount = cartItems.reduce((acc, item) => acc + (Number(item.quantity) || 1), 0);
+  const subtotal = cartItems.reduce(
+    (acc, item) => acc + parsePrice(item.price) * (Number(item.quantity) || 1),
+    0
+  );
   const tax = subtotal * 0.08;
   const total = subtotal + tax;
 
