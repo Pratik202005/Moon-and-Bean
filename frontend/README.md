@@ -1,17 +1,17 @@
 # MOON & BEAN — Client Web Application
 
-Welcome to the frontend application for **Moon & Bean Artisanal Roastery & Tasting Salon**. This is a high-performance, dark-luxury web application built with React 19, Vite, Tailwind CSS, Framer Motion, and GSAP.
+Welcome to the frontend application for **Moon & Bean**. This is a responsive single-page web application built with React 19, Vite, Tailwind CSS, Framer Motion, and GSAP.
 
 ---
 
 ## 🌟 Architecture & Features
 
-- **Luxury Obsidian Design System**: Bespoke dark color palette (`#0B0A0A`, `#141211`, `#1B1816`) with metallic warm gold accents (`#C5A880`, `#E5A853`).
-- **Kinetic Theatrical Preloader**: Synchronized GSAP Master Timeline sequencing brand keywords, numeric countdown, split-curtain animation, and hero video entrance.
+- **Dark Theme Design System**: Built with Tailwind CSS and custom dark color tokens (`#0B0A0A`, `#141211`, `#1B1816`, `#C5A880`).
+- **Loading Preloader**: Synchronized GSAP Master Timeline sequencing brand keywords, numeric countdown, and video entrance.
 - **Interactive Floor Plan Booking Engine**: Multi-step table reservation workflow with live zone selection (*The Master Roastery & Bar*, *The Nocturne Velvet Lounge*, *The Lantern Roastery Terrace*).
-- **Apple Wallet-Style Digital Sanctuary Pass**: Dynamic reservation pass generation featuring verified reference numbers, QR code rendering, and live booking telemetry.
-- **Master Reserve Menu & Customizer**: Dynamic filtering across roast categories, terroir origin metadata, elevation metrics, and custom brew options (grind, milk, sweetness, temperature).
-- **Admin Management Atelier**: Dedicated executive telemetry dashboard for managing reservations, live barista Kanban orders, and full menu catalog CRUD operations.
+- **Digital Reservation Pass**: Dynamic reservation pass generation featuring verified reference numbers and QR code rendering.
+- **Menu Catalog & Drink Customizer**: Live filtering across roast categories and custom brew options (grind, milk, sweetness, temperature).
+- **Admin Management Dashboard**: Dedicated admin dashboard for managing reservations, live order fulfillment status, and full menu catalog CRUD operations.
 
 ---
 

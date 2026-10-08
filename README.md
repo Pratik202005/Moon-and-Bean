@@ -9,18 +9,18 @@
 > 🔗 **Live Demo:** [https://moon-and-bean.vercel.app](https://moon-and-bean.vercel.app) *(Replace with your live URL)*  
 > 🔗 **Backend API:** [https://moon-and-bean-api.onrender.com/api/health](https://moon-and-bean-api.onrender.com/api/health)
 
-**Moon & Bean** is an artisanal, dark-luxury digital roastery and tasting lounge platform. It blends high-fashion editorial storytelling with a robust full-stack MERN architecture, offering interactive coffee customization, real-time cupping reservation management, an Apple Wallet-inspired customer Digital Pass system, and an Admin Telemetry Control Center.
+**Moon & Bean** is a full-stack MERN platform for an artisanal roastery and café. It features drink customization, table reservation booking, digital pass cards with QR verification, and a protected admin management dashboard.
 
 ---
 
 ## 🌟 Key Highlights & Architecture
 
-- **Visual Aesthetics:** Dark obsidian luxury design system built with custom theme color tokens (`#0B0A0A`, `#141211`, `#1B1816`, `#C5A880`), ambient radial glows, glassmorphism containers, and smooth Lenis momentum scrolling.
-- **Theatrical Curtain Preloader:** Synchronized GSAP Master Timeline preloader with numeric countdown (0-100), brand keyword rotation, split-curtains, and smooth hero coffee video reveal.
-- **Interactive Floor Plan Engine:** Interactive seating zone selection engine allowing guests to reserve specific salon zones (*The Master Roastery & Bar*, *The Nocturne Velvet Lounge*, *The Lantern Roastery Terrace*).
-- **Dual Subsystems (RBAC):**
-  - **Customer Subsystem:** User registration/login, order history tracking, and Apple Wallet-style Digital Reservation Pass card generation with dynamic QR verification.
-  - **Admin Subsystem:** Password-protected dashboard featuring real-time revenue telemetry, reservation status management, live barista order Kanban board, and full Menu CRUD capabilities.
+- **Interface & Interactions:** Dark-mode design system built with custom color tokens (`#0B0A0A`, `#141211`, `#1B1816`, `#C5A880`), glassmorphic panels, and smooth Lenis momentum scrolling.
+- **Loading Sequence:** Synchronized GSAP Master Timeline preloader with numeric countdown, keyword transitions, and hero video entrance.
+- **Table Reservation Flow:** Interactive seating zone selection (*Roastery Bar*, *Velvet Lounge*, *Roastery Terrace*) with live time-slot validation.
+- **Role-Based Access (RBAC):**
+  - **User Portal:** User registration/login, past order tracking, and digital reservation pass generation with QR verification.
+  - **Admin Portal:** Protected dashboard featuring sales metrics, reservation management, live order fulfillment status, and menu catalog CRUD.
 
 ---
 
@@ -40,122 +40,150 @@
 
 ```
 Moon_and_Bean/
-├── .gitignore                    # Git tracking ignore rules
-├── ARCHITECTURE.md               # Production architecture, schemas & operational runbook
-├── DEPLOYMENT_GUIDE.md           # Step-by-step cloud deployment guide (Atlas, Render, Vercel)
-├── package.json                  # Root orchestrator scripts (concurrent dev, lint & build)
-├── README.md                     # Comprehensive project documentation & quickstart
+├── backend/                      # Node.js & Express REST API server
+│   ├── config/                   # Database connection
+│   ├── controllers/              # Route business logic handlers
+│   ├── middleware/               # Auth guards & error handling
+│   ├── models/                   # Mongoose data schemas
+│   ├── routes/                   # API endpoint routers
+│   ├── seeder.js                 # Database seed script
+│   └── server.js                 # Express server entry point
 │
-├── backend/                      # Node.js & Express REST API Server
-│   ├── .env.example              # Environment variables template (MONGODB_URI, JWT_SECRET, etc.)
-│   ├── .gitignore                # Backend-specific ignore rules (.env)
-│   ├── package.json              # Backend dependencies (express, mongoose, bcryptjs, jwt)
-│   ├── seeder.js                 # Database seeder (single-origin coffee menu & admin account)
-│   ├── server.js                 # Express server setup, CORS whitelist, Morgan logging & routes
-│   │
-│   ├── config/
-│   │   └── db.js                 # Mongoose connection with error handling & retry
-│   ├── controllers/
-│   │   ├── adminController.js    # Executive analytics, revenue metrics & order fulfillment
-│   │   ├── authController.js     # User registration, authentication & JWT issuance
-│   │   ├── menuController.js     # Terroir menu catalog CRUD operations
-│   │   ├── orderController.js    # Barista order processing, table dispatch & history
-│   │   ├── reservationController.js # Spatial table reservations & digital pass generation
-│   │   └── userController.js     # Member profile & reservation history retrieval
-│   ├── middleware/
-│   │   ├── authMiddleware.js     # JWT verification & role-based access guards (protect, requireAdmin)
-│   │   └── errorHandler.js       # Global API error boundary & standardized JSON responses
-│   ├── models/
-│   │   ├── MenuItem.js           # Terroir catalog schema (flavor notes, elevation, roast level)
-│   │   ├── Order.js              # Dining & takeaway order schema (items, pricing, status)
-│   │   ├── Reservation.js        # Table reservation schema with unique bookingRef (MB-XXXXXX)
-│   │   └── User.js               # Member & admin user schema with bcrypt password hashing
-│   └── routes/
-│       ├── adminRoutes.js        # Protected administrative telemetry routes
-│       ├── authRoutes.js         # Member authentication routes (/api/auth)
-│       ├── menuRoutes.js         # Menu item management routes (/api/menu)
-│       ├── orderRoutes.js        # Real-time order management routes (/api/orders)
-│       ├── reservationRoutes.js  # Cupping & table booking routes (/api/reservations)
-│       └── userRoutes.js         # Member profile routes (/api/users)
+├── frontend/                     # React 19 / Vite SPA client
+│   ├── public/                   # Static assets & brand favicon
+│   ├── src/                      # Client application source code
+│   │   ├── assets/               # Media assets (video & photography)
+│   │   ├── components/           # Reusable UI components
+│   │   ├── config/               # API base URL configuration
+│   │   ├── constants/            # Menu fallback data
+│   │   ├── context/              # React Context state providers
+│   │   ├── hooks/                # Custom React hooks
+│   │   ├── lib/                  # Library configurations
+│   │   └── pages/                # Route views (Customer & Admin)
+│   ├── index.html                # HTML entry point
+│   ├── vercel.json               # SPA routing rewrite rules
+│   └── vite.config.js            # Vite build configuration & dev proxy
 │
-└── frontend/                     # React 19 / Vite Single-Page Application
-    ├── .env.development          # Local environment config (VITE_API_BASE_URL=/api)
-    ├── .env.example              # Frontend environment template
-    ├── .env.production           # Production environment config (VITE_API_BASE_URL)
-    ├── index.html                # HTML5 entry with luxury typography & meta tags
-    ├── package.json              # React 19, Lucide, Tailwind, GSAP & Framer Motion dependencies
-    ├── postcss.config.js         # PostCSS configuration
-    ├── tailwind.config.js        # Obsidian luxury theme tokens, custom colors & keyframe animations
-    ├── vercel.json               # Vercel deployment configuration & SPA routing rewrites
-    ├── vite.config.js            # Vite build configuration with development API proxy
-    │
-    ├── public/
-    │   └── favicon.svg           # Moon & Bean brand favicon
-    │
-    └── src/
-        ├── App.jsx               # Application route hierarchy & navigation routes
-        ├── index.css             # Obsidian luxury CSS styling, scrollbar, radial glow utilities
-        ├── main.jsx              # React 19 client mounting point
-        │
-        ├── assets/               # Visual media assets
-        │   ├── hero-coffee.mp4   # Atmospheric cinemagraph video for hero section
-        │   └── hero.png          # High-resolution fallback & editorial photography
-        │
-        ├── components/           # Reusable UI component architecture
-        │   ├── admin/
-        │   │   └── MenuModal.jsx # Admin catalog item creation & editor modal
-        │   ├── auth/
-        │   │   ├── AdminRoute.jsx # Route guard restricting access to administrator role
-        │   │   ├── AuthModal.jsx  # Member login & registration modal dialog
-        │   │   └── UserRoute.jsx  # Protected route guard for member dashboard
-        │   ├── layout/
-        │   │   ├── Footer.jsx     # Luxury editorial footer with hours & newsletter
-        │   │   ├── Header.jsx     # Glassmorphic navigation header with live cart badge
-        │   │   ├── RootLayout.jsx # Master layout wrapper with toast notifications
-        │   │   └── SmoothScroll.jsx # Lenis momentum smooth scrolling provider
-        │   ├── sections/
-        │   │   ├── HomeCTA.jsx    # Reservation invitation banner
-        │   │   ├── HomeGallery.jsx # Editorial grid showcasing roasting techniques
-        │   │   ├── HomeHero.jsx   # Kinetic hero section with video background
-        │   │   ├── HomeMenu.jsx   # Curated featured roasts showcase
-        │   │   └── HomeStory.jsx  # Roastery heritage narrative
-        │   └── ui/
-        │       ├── CartDrawer.jsx         # Slide-out shopping cart with item quantity controls
-        │       ├── CheckoutModal.jsx      # Order confirmation & table dispatch modal
-        │       ├── CustomCursor.jsx       # Custom luxury metallic cursor tracking
-        │       ├── DigitalPassModal.jsx   # Apple Wallet-style reservation pass modal
-        │       ├── FloorPlanPicker.jsx    # Spatial salon seating zone selector
-        │       ├── ItemModal.jsx          # Coffee customization modal (grind, sweetness, milk)
-        │       ├── Preloader.jsx          # GSAP synchronized split-curtain opening sequence
-        │       ├── QuickTableBook.jsx     # Fast cupping booking widget
-        │       ├── ReservationModal.jsx   # Interactive reservation workflow dialog
-        │       ├── SpecularGlow.jsx       # Subtle ambient luminous backdrop effects
-        │       └── ToastNotification.jsx  # Animated action notification toasts
-        │
-        ├── config/
-        │   └── api.js            # Dynamic API base URL resolver (development vs production)
-        ├── constants/
-        │   └── menuData.js       # Curated single-origin fallback menu catalog
-        ├── context/
-        │   ├── AdminAuthContext.jsx # Admin session state & telemetry credentials
-        │   ├── CartContext.jsx      # Shopping cart & roast customizer global state
-        │   └── UserAuthContext.jsx  # Member authentication & JWT token management
-        ├── hooks/
-        │   └── useScrollReset.jsx # Scroll position reset hook on route change
-        ├── lib/
-        │   └── gsapConfig.js     # GSAP & ScrollTrigger plugins registration
-        └── pages/
-            ├── Home.jsx          # Landing page with cinematic storytelling sections
-            ├── Login.jsx         # Member authentication page
-            ├── Menu.jsx          # Terroir reserve menu with live category filters & search
-            ├── NotFound.jsx      # Custom 404 luxury error page
-            ├── Reservation.jsx   # Full interactive spatial reservation portal
-            ├── Story.jsx         # Roastery philosophy, terroir sourcing & ethos
-            ├── UserDashboard.jsx # Member portal (order history, passes, quick-reorder)
-            └── admin/
-                ├── AdminDashboard.jsx # Telemetry overview, revenue metrics, orders & menu CRUD
-                └── AdminLogin.jsx     # Admin credentials login screen
+├── ARCHITECTURE.md               # Architecture, schemas & operational runbook
+├── DEPLOYMENT_GUIDE.md           # Deployment runbook (MongoDB Atlas, Render, Vercel)
+└── README.md                     # Project overview and setup guide
 ```
+
+<details>
+<summary><strong>Click to view full repository file tree</strong></summary>
+
+```
+Moon_and_Bean/
+├── .gitignore                    # Git tracking ignore rules
+├── ARCHITECTURE.md               # System architecture & technical reference
+├── DEPLOYMENT_GUIDE.md           # Step-by-step production deployment guide
+├── package.json                  # Root runner scripts (concurrent dev & build)
+├── README.md                     # Project documentation & quickstart
+│
+├── backend/                      # Express REST API
+│   ├── .env.example              # Environment variables template
+│   ├── .gitignore                # Backend ignore rules
+│   ├── package.json              # Backend dependencies
+│   ├── seeder.js                 # Menu and admin seed script
+│   ├── server.js                 # Server entry point, CORS whitelist & routes
+│   ├── config/
+│   │   └── db.js                 # MongoDB connection handler
+│   ├── controllers/
+│   │   ├── adminController.js    # Admin analytics, order status & menu CRUD
+│   │   ├── authController.js     # User registration, login & JWT issuance
+│   │   ├── menuController.js     # Menu catalog CRUD operations
+│   │   ├── orderController.js    # Order processing, table dispatch & history
+│   │   ├── reservationController.js # Table reservations & digital pass lookup
+│   │   └── userController.js     # User profile & reservation history
+│   ├── middleware/
+│   │   ├── authMiddleware.js     # JWT verification & role guards (protect, requireAdmin)
+│   │   └── errorHandler.js       # Centralized error handler
+│   ├── models/
+│   │   ├── MenuItem.js           # Menu item schema
+│   │   ├── Order.js              # Order schema
+│   │   ├── Reservation.js        # Reservation schema with bookingRef
+│   │   └── User.js               # User and admin account schema
+│   └── routes/
+│       ├── adminRoutes.js        # Protected admin routes
+│       ├── authRoutes.js         # Authentication endpoints (/api/auth)
+│       ├── menuRoutes.js         # Menu endpoints (/api/menu)
+│       ├── orderRoutes.js        # Order endpoints (/api/orders)
+│       ├── reservationRoutes.js  # Reservation endpoints (/api/reservations)
+│       └── userRoutes.js         # User profile endpoints (/api/users)
+│
+└── frontend/                     # React 19 / Vite SPA
+    ├── .env.example              # Frontend environment template
+    ├── .env.production           # Production environment config (public API URL only)
+    ├── index.html                # HTML document entry
+    ├── package.json              # Frontend dependencies
+    ├── postcss.config.js         # PostCSS config
+    ├── tailwind.config.js        # Tailwind theme tokens & color configuration
+    ├── vercel.json               # SPA routing rewrite rules
+    ├── vite.config.js            # Vite build configuration & dev proxy
+    ├── public/
+    │   └── favicon.svg           # Brand favicon
+    └── src/
+        ├── App.jsx               # Route definitions
+        ├── index.css             # Global styles & design system utilities
+        ├── main.jsx              # React mounting entry point
+        ├── assets/
+        │   ├── hero-coffee.mp4   # Hero video asset
+        │   └── hero.png          # Hero image fallback
+        ├── components/
+        │   ├── admin/
+        │   │   └── MenuModal.jsx # Menu item create/edit modal
+        │   ├── auth/
+        │   │   ├── AdminRoute.jsx # Admin role route guard
+        │   │   ├── AuthModal.jsx  # User login and registration modal
+        │   │   └── UserRoute.jsx  # User role route guard
+        │   ├── layout/
+        │   │   ├── Footer.jsx     # Global footer
+        │   │   ├── Header.jsx     # Navigation bar with cart indicator
+        │   │   ├── RootLayout.jsx # Layout wrapper with toast notifications
+        │   │   └── SmoothScrollWrapper.jsx # Smooth scroll provider
+        │   ├── sections/
+        │   │   ├── HomeCTA.jsx    # Reservation call to action
+        │   │   ├── HomeGallery.jsx # Photo gallery grid
+        │   │   ├── HomeHero.jsx   # Hero section with background video
+        │   │   ├── HomeMenu.jsx   # Featured menu section
+        │   │   └── HomeStory.jsx  # Story section
+        │   └── ui/
+        │       ├── CartDrawer.jsx         # Cart drawer component
+        │       ├── CheckoutModal.jsx      # Checkout and table selection modal
+        │       ├── CustomCursor.jsx       # Custom cursor effect
+        │       ├── DigitalPassModal.jsx   # Digital reservation pass modal
+        │       ├── FloorPlanPicker.jsx    # Seating zone selector
+        │       ├── ItemModal.jsx          # Drink customization modal
+        │       ├── Preloader.jsx          # Initial loading screen animation
+        │       ├── QuickTableBooker.jsx   # Quick booking widget
+        │       ├── ReservationModal.jsx   # Reservation modal
+        │       ├── SpecularGlow.jsx       # Background glow visual effect
+        │       └── ToastNotification.jsx  # Notification toast
+        ├── config/
+        │   └── api.js            # API base URL resolver
+        ├── constants/
+        │   └── menuData.js       # Static menu fallback data
+        ├── context/
+        │   ├── AdminAuthContext.jsx # Admin session state
+        │   ├── CartContext.jsx      # Cart and drink options state
+        │   └── UserAuthContext.jsx  # User authentication state
+        ├── hooks/
+        │   └── useScrollReset.jsx # Scroll reset on route transition
+        ├── lib/
+        │   └── gsapConfig.js     # GSAP plugin initialization
+        └── pages/
+            ├── Home.jsx          # Landing page
+            ├── Login.jsx         # User login page
+            ├── Menu.jsx          # Menu catalog page with category filters
+            ├── NotFound.jsx      # 404 page
+            ├── Reservation.jsx   # Table reservation page
+            ├── Story.jsx         # Brand story page
+            ├── UserDashboard.jsx # User account dashboard
+            └── admin/
+                ├── AdminDashboard.jsx # Admin dashboard (analytics, orders, menu CRUD)
+                └── AdminLogin.jsx     # Admin login page
+```
+</details>
 
 ---
 
