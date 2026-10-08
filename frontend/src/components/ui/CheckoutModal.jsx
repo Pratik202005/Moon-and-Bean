@@ -13,6 +13,17 @@ const CheckoutModal = ({ isOpen, onClose, onCheckoutSuccess }) => {
   const { user } = useUserAuth();
   const navigate = useNavigate();
 
+  const [paymentMethod, setPaymentMethod] = useState('card'); // 'card' | 'table' | 'upi'
+  const [tableNo, setTableNo] = useState('Barista Salon Table 4');
+  const [guestName, setGuestName] = useState(user?.name || '');
+  const [guestEmail, setGuestEmail] = useState(user?.email || '');
+  const [cardNumber, setCardNumber] = useState('4242 •••• •••• 4242');
+  const [cardExpiry, setCardExpiry] = useState('12/28');
+  const [cardCvc, setCardCvc] = useState('888');
+
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [receipt, setReceipt] = useState(null);
+
   // Close on Escape key press
   useEffect(() => {
     const handleKeyDown = (e) => {
@@ -24,17 +35,6 @@ const CheckoutModal = ({ isOpen, onClose, onCheckoutSuccess }) => {
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [isOpen, onClose, receipt]);
-
-  const [paymentMethod, setPaymentMethod] = useState('card'); // 'card' | 'table' | 'upi'
-  const [tableNo, setTableNo] = useState('Barista Salon Table 4');
-  const [guestName, setGuestName] = useState(user?.name || '');
-  const [guestEmail, setGuestEmail] = useState(user?.email || '');
-  const [cardNumber, setCardNumber] = useState('4242 •••• •••• 4242');
-  const [cardExpiry, setCardExpiry] = useState('12/28');
-  const [cardCvc, setCardCvc] = useState('888');
-
-  const [isProcessing, setIsProcessing] = useState(false);
-  const [receipt, setReceipt] = useState(null);
 
   useEffect(() => {
     if (user) {
