@@ -1,13 +1,14 @@
 # MOON & BEAN — Artisanal Dark-Mode Roastery & Café
 
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-moon--and--bean.vercel.app-D4AF37.svg)](https://moon-and-bean.vercel.app/)
 [![MERN Stack](https://img.shields.io/badge/Stack-MERN-gold.svg)](https://mongodb.com)
 [![React 19](https://img.shields.io/badge/React-19-blue.svg)](https://react.dev)
 [![Node Express](https://img.shields.io/badge/Backend-Node.js%20%7C%20Express-green.svg)](https://expressjs.com)
 [![GSAP Animations](https://img.shields.io/badge/Animation-GSAP%20ScrollTrigger-darkgreen.svg)](https://greensock.com)
-[![Deployment](https://img.shields.io/badge/Deploy-Vercel%20%7C%20Render-black.svg)](./DEPLOYMENT_GUIDE.md)
+[![Deployment](https://img.shields.io/badge/Deploy-Vercel%20%7C%20Render-black.svg)](https://moon-and-bean.vercel.app/)
 
-> 🔗 **Live Demo:** [https://moon-and-bean.vercel.app](https://moon-and-bean.vercel.app) *(Replace with your live URL)*  
-> 🔗 **Backend API:** [https://moon-and-bean-api.onrender.com/api/health](https://moon-and-bean-api.onrender.com/api/health)
+> ☕ **Live Production Application:** [https://moon-and-bean.vercel.app](https://moon-and-bean.vercel.app/)  
+> ⚡ **Live Production Backend API:** [https://moon-and-bean-api.onrender.com/api/menu](https://moon-and-bean-api.onrender.com/api/menu)
 
 **Moon & Bean** is a full-stack MERN platform for an artisanal roastery and café. It features drink customization, table reservation booking, digital pass cards with QR verification, and a protected admin management dashboard.
 
@@ -264,14 +265,17 @@ To access the Admin Subsystem (`/admin/login`):
 
 ## 🌐 Production Deployment
 
+- **Live Frontend Application:** [https://moon-and-bean.vercel.app/](https://moon-and-bean.vercel.app/)
+- **Live Backend REST API:** [https://moon-and-bean-api.onrender.com/api/menu](https://moon-and-bean-api.onrender.com/api/menu)
+
 > For a complete, illustrated walk-through with screenshots and step-by-step instructions, see the dedicated [DEPLOYMENT_GUIDE.md](./DEPLOYMENT_GUIDE.md).
 
-### Frontend (Vercel / Netlify)
-1. Link repository to Vercel or Netlify.
+### Frontend (Vercel)
+1. Link repository to Vercel.
 2. Root Directory: `frontend`
 3. Build Command: `npm run build`
 4. Output Directory: `dist`
-5. Configure `VITE_API_BASE_URL` with your production API URL (e.g. `https://api.yourdomain.com/api`).
+5. Configure `VITE_API_BASE_URL` with your production API URL (`https://moon-and-bean-api.onrender.com/api`).
 
 ### Backend (Render / Railway)
 1. Deploy `backend` directory as Node.js web service.
